@@ -18,10 +18,17 @@ async function run() {
   try {
     await client.connect();
     const airCollection = client.db("aircool").collection("air");
-    app.get("/product/:id", async (req, res) => {
+    app.get("/purchase/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
+      console.log(query);
       const result = await airCollection.findOne(query);
+      res.send(result);
+    });
+    app.get("/product", async (req, res) => {
+      const query = {};
+      const cursor = airCollection.find(query);
+      const result = await cursor.toArray();
       res.send(result);
     });
   } finally {
