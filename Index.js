@@ -21,7 +21,6 @@ async function run() {
     app.get("/purchase/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      console.log(query);
       const result = await airCollection.findOne(query);
       res.send(result);
     });
@@ -29,6 +28,11 @@ async function run() {
       const query = {};
       const cursor = airCollection.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.post("/order", async (req, res) => {
+      const product = req.body;
+      const result = await airCollection.insertOne(product);
       res.send(result);
     });
   } finally {
