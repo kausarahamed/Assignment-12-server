@@ -21,6 +21,7 @@ async function run() {
     const orderCollection = client.db("aircool").collection("order");
     const userCollection = client.db("aircool").collection("user");
     const addReviewCollection = client.db("aircool").collection("review");
+    const adminProductCollection = client.db("aircool").collection("product");
     app.get("/purchase/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -76,6 +77,25 @@ async function run() {
     //ADD Review
     app.get("/addreview", async (req, res) => {
       const result = await addReviewCollection.find().toArray();
+      res.send(result);
+    });
+
+    // add product admin
+    app.post("/addProduct", async (req, res) => {
+      const product = req.body;
+      const result = await adminProductCollection.insertOne(product);
+      res.send(result);
+    });
+
+    app.get("/items", async (req, res) => {
+      const cursor = adminProductCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.delete("/items/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await adminProductCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
