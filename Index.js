@@ -18,6 +18,8 @@ async function run() {
   try {
     await client.connect();
     const airCollection = client.db("aircool").collection("air");
+    const orderCollection = client.db("aircool").collection("order");
+    const userCollection = client.db("aircool").collection("user");
     app.get("/purchase/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -31,8 +33,57 @@ async function run() {
       res.send(result);
     });
     app.post("/order", async (req, res) => {
-      const product = req.body;
-      const result = await airCollection.insertOne(product);
+      const product = req.body.order;
+      const result = await orderCollection.insertOne(product);
+      res.send(result);
+    });
+    // app.put("/user/:email", async (req, res) => {
+    //   const email = req.params.email;
+    //   const user = req.body.profile;
+    //   const filter = { email: email };
+    //   const options = { upsert: true };
+    //   const updateDoc = {
+    //     $set: user,
+    //   };
+    //   const result = await userCollection.insertOne(updateDoc);
+    //   res.send(result);
+    // });
+    //
+    // app.put("/user/:email", async (req, res) => {
+    //   const email = req.params.email;
+    //   const profile = req.body.profile;
+    //   const filter = { email };
+    //   const options = { upsert: true };
+    //   const updateDoc = {
+    //     $set: { profile },
+    //   };
+    //   const result = await userCollection.updateOne(filter, updateDoc, options);
+    //   res.send(result);
+    // });
+    app.put("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const profile = req.body;
+      console.log(profile);
+      const query = { email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name: profile.name,
+          email: profile.email,
+          education: profile.education,
+          number: profile.number,
+          address: profile.address,
+          linkedin: profile.linkedin,
+        },
+      };
+      const result = await userCollection.updateOne(query, updateDoc, options);
+      res.send(result);
+    });
+
+    app.get("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const result = await userCollection.findOne(query);
       res.send(result);
     });
   } finally {
