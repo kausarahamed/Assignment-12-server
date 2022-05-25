@@ -37,29 +37,7 @@ async function run() {
       const result = await orderCollection.insertOne(product);
       res.send(result);
     });
-    // app.put("/user/:email", async (req, res) => {
-    //   const email = req.params.email;
-    //   const user = req.body.profile;
-    //   const filter = { email: email };
-    //   const options = { upsert: true };
-    //   const updateDoc = {
-    //     $set: user,
-    //   };
-    //   const result = await userCollection.insertOne(updateDoc);
-    //   res.send(result);
-    // });
-    //
-    // app.put("/user/:email", async (req, res) => {
-    //   const email = req.params.email;
-    //   const profile = req.body.profile;
-    //   const filter = { email };
-    //   const options = { upsert: true };
-    //   const updateDoc = {
-    //     $set: { profile },
-    //   };
-    //   const result = await userCollection.updateOne(filter, updateDoc, options);
-    //   res.send(result);
-    // });
+
     app.put("/user/:email", async (req, res) => {
       const email = req.params.email;
       const profile = req.body;
