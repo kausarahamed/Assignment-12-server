@@ -43,7 +43,6 @@ async function run() {
     app.put("/user/:email", async (req, res) => {
       const email = req.params.email;
       const profile = req.body;
-      console.log(profile);
       const query = { email };
       const options = { upsert: true };
       const updateDoc = {
@@ -96,6 +95,28 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await adminProductCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.get("/order", async (req, res) => {
+      const cursor = orderCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    });
+    // admin
+    app.delete("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.get("/users", async (req, res) => {
+      const result = await userCollection.find().toArray();
       res.send(result);
     });
   } finally {
