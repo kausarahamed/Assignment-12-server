@@ -121,6 +121,48 @@ async function run() {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
+    //admin
+    app.get("/owner", async (req, res) => {
+      const users = await userCollection.find().toArray();
+      res.send(users);
+    });
+
+    // app.put("/owner/admin/:email", async (req, res) => {
+    //   const email = req.params.email;
+    //   // const requester = req.decoded.email;
+    //   const requesterAccount = await userCollection.findOne({
+    //     email: requester,
+    //   });
+    //   if (requesterAccount.role === "admin") {
+    //     const filter = { email: email };
+    //     const updateDoc = {
+    //       $set: { role: "admin" },
+    //     };
+    //     const result = await userCollection.updateOne(filter, updateDoc);
+    //     res.send(result);
+    //   } else {
+    //     res.status(403).send({ message: "forbidden" });
+    //   }
+    // });
+    app.put("/owner/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const requester = req.body.email;
+      console.log(req.body);
+      const requesterAccount = await userCollection.findOne({
+        email: requester,
+      });
+
+      if (requesterAccount?.role === "admin") {
+        const filter = { email: email };
+        const updateDoc = {
+          $set: { role: "admin" },
+        };
+        const result = await userCollection.updateOne(filter, updateDoc);
+        res.send(result);
+      } else {
+        res.status(403).send({ message: "forbidden" });
+      }
+    });
     // payment
     app.get("/order/:id", async (req, res) => {
       const id = req.params.id;
